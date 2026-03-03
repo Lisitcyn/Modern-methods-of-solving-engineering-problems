@@ -1,0 +1,57 @@
+@prefix : <http://kik.misis.ru/ontology/mpi/2024/Лисицын/task3/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://kik.misis.ru/ontology/mpi/2024/Лисицын/task3/> .
+
+: rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+:обучаетсяНаПрограмме rdf:type owl:ObjectProperty ;
+    rdfs:domain :Студент ;
+    rdfs:range :ОбразовательнаяПрограмма .
+
+:включает rdf:type owl:ObjectProperty , owl:TransitiveProperty .
+
+:имеетАвтора rdf:type owl:ObjectProperty ;
+    rdfs:domain :Запрос ;
+    rdfs:range :Студент .
+
+:обращаетсяК rdf:type owl:ObjectProperty ;
+    rdfs:domain :Запрос ;
+    rdfs:range :ЭлектронныйОбразовательныйРесурс .
+
+#################################################################
+#    Classes
+#################################################################
+
+:Студент rdf:type owl:Class .
+:ОбразовательнаяПрограмма rdf:type owl:Class .
+:Предмет rdf:type owl:Class .
+:ЭлектронныйОбразовательныйРесурс rdf:type owl:Class .
+:Запрос rdf:type owl:Class .
+:ВалидныйЗапрос rdf:type owl:Class .
+
+#################################################################
+#    Individuals
+#################################################################
+
+:Иван_Петров rdf:type owl:NamedIndividual , :Студент ;
+    :обучаетсяНаПрограмме :ПрикладнаяИнформатика .
+
+:ПрикладнаяИнформатика rdf:type owl:NamedIndividual , :ОбразовательнаяПрограмма ;
+    :включает :Информатика .
+
+:Информатика rdf:type owl:NamedIndividual , :Предмет ;
+    :включает :ОнтологииИСемантическийВеб .
+
+:ОнтологииИСемантическийВеб rdf:type owl:NamedIndividual , :ЭлектронныйОбразовательныйРесурс .
+
+:Запрос1 rdf:type owl:NamedIndividual , :Запрос ;
+    :имеетАвтора :Иван_Петров ;
+    :обращаетсяК :ОнтологииИСемантическийВеб .

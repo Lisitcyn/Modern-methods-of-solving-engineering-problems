@@ -1,0 +1,142 @@
+@prefix : <http://kik.misis.ru/ontology/mpi/2024/Лисицын/task3/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix swrla: <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#> .
+@base <http://kik.misis.ru/ontology/mpi/2024/Лисицын/task3/> .
+
+: rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties (те же, что в ontology.ttl)
+#################################################################
+
+:обучаетсяНаПрограмме rdf:type owl:ObjectProperty .
+:включает rdf:type owl:ObjectProperty , owl:TransitiveProperty .
+:имеетАвтора rdf:type owl:ObjectProperty .
+:обращаетсяК rdf:type owl:ObjectProperty .
+
+#################################################################
+#    Classes (те же, что в ontology.ttl)
+#################################################################
+
+:Студент rdf:type owl:Class .
+:ОбразовательнаяПрограмма rdf:type owl:Class .
+:Предмет rdf:type owl:Class .
+:ЭлектронныйОбразовательныйРесурс rdf:type owl:Class .
+:Запрос rdf:type owl:Class .
+:ВалидныйЗапрос rdf:type owl:Class .
+
+#################################################################
+#    Individuals (те же, что в ontology.ttl)
+#################################################################
+
+:Иван_Петров rdf:type owl:NamedIndividual , :Студент ;
+    :обучаетсяНаПрограмме :ПрикладнаяИнформатика .
+
+:ПрикладнаяИнформатика rdf:type owl:NamedIndividual , :ОбразовательнаяПрограмма ;
+    :включает :Информатика .
+
+:Информатика rdf:type owl:NamedIndividual , :Предмет ;
+    :включает :ОнтологииИСемантическийВеб .
+
+:ОнтологииИСемантическийВеб rdf:type owl:NamedIndividual , :ЭлектронныйОбразовательныйРесурс .
+
+:Запрос1 rdf:type owl:NamedIndividual , :Запрос ;
+    :имеетАвтора :Иван_Петров ;
+    :обращаетсяК :ОнтологииИСемантическийВеб .
+
+#################################################################
+#    SWRL Variables
+#################################################################
+
+:var_x rdf:type swrl:Variable .
+:var_студент rdf:type swrl:Variable .
+:var_программа rdf:type swrl:Variable .
+:var_эор rdf:type swrl:Variable .
+
+#################################################################
+#    SWRL Rule
+#################################################################
+
+[
+    rdf:type swrl:Imp ;
+    rdfs:label "Правило валидности запроса" ;
+    
+    # Антецедент (ЕСЛИ)
+    swrl:body [
+        rdf:type swrl:AtomList ;
+        rdf:first [
+            rdf:type swrl:ClassAtom ;
+            swrl:classPredicate :Запрос ;
+            swrl:argument1 :var_x
+        ] ;
+        rdf:rest [
+            rdf:type swrl:AtomList ;
+            rdf:first [
+                rdf:type swrl:ClassAtom ;
+                swrl:classPredicate :Студент ;
+                swrl:argument1 :var_студент
+            ] ;
+            rdf:rest [
+                rdf:type swrl:AtomList ;
+                rdf:first [
+                    rdf:type swrl:IndividualPropertyAtom ;
+                    swrl:propertyPredicate :имеетАвтора ;
+                    swrl:argument1 :var_x ;
+                    swrl:argument2 :var_студент
+                ] ;
+                rdf:rest [
+                    rdf:type swrl:AtomList ;
+                    rdf:first [
+                        rdf:type swrl:IndividualPropertyAtom ;
+                        swrl:propertyPredicate :обучаетсяНаПрограмме ;
+                        swrl:argument1 :var_студент ;
+                        swrl:argument2 :var_программа
+                    ] ;
+                    rdf:rest [
+                        rdf:type swrl:AtomList ;
+                        rdf:first [
+                            rdf:type swrl:IndividualPropertyAtom ;
+                            swrl:propertyPredicate :включает ;
+                            swrl:argument1 :var_программа ;
+                            swrl:argument2 :var_эор
+                        ] ;
+                        rdf:rest [
+                            rdf:type swrl:AtomList ;
+                            rdf:first [
+                                rdf:type swrl:ClassAtom ;
+                                swrl:classPredicate :ЭлектронныйОбразовательныйРесурс ;
+                                swrl:argument1 :var_эор
+                            ] ;
+                            rdf:rest [
+                                rdf:type swrl:AtomList ;
+                                rdf:first [
+                                    rdf:type swrl:IndividualPropertyAtom ;
+                                    swrl:propertyPredicate :обращаетсяК ;
+                                    swrl:argument1 :var_x ;
+                                    swrl:argument2 :var_эор
+                                ] ;
+                                rdf:rest rdf:nil
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ] ;
+    
+    # Консеквент (ТО)
+    swrl:head [
+        rdf:type swrl:AtomList ;
+        rdf:first [
+            rdf:type swrl:ClassAtom ;
+            swrl:classPredicate :ВалидныйЗапрос ;
+            swrl:argument1 :var_x
+        ] ;
+        rdf:rest rdf:nil
+    ]
+] .
