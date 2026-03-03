@@ -1,0 +1,264 @@
+@prefix : <http://example.org/stabilizer#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix swrla: <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#> .
+@prefix squ: <http://example.org/stabilizer-quantities#> .
+
+: rdf:type owl:Ontology ;
+    rdfs:comment "Онтология стабилизатора напряжения ЭнергоСейф-2000 с учетом высокогорных условий эксплуатации"@ru .
+
+#################################################################
+#    Классы
+#################################################################
+
+:Стабилизатор rdf:type owl:Class ;
+    rdfs:label "Стабилизатор напряжения"@ru ;
+    rdfs:comment "Устройство для стабилизации напряжения ЭнергоСейф-2000"@ru .
+
+:УсловияЭксплуатации rdf:type owl:Class ;
+    rdfs:label "Условия эксплуатации"@ru .
+
+:ВысотныеУсловия rdf:type owl:Class ;
+    rdfs:subClassOf :УсловияЭксплуатации ;
+    rdfs:label "Высотные условия"@ru ;
+    rdfs:comment "Условия эксплуатации на высоте над уровнем моря"@ru .
+
+:ЧастотныеУсловия rdf:type owl:Class ;
+    rdfs:subClassOf :УсловияЭксплуатации ;
+    rdfs:label "Частотные условия"@ru ;
+    rdfs:comment "Условия, связанные с частотой сети"@ru .
+
+:ТемпературныеУсловия rdf:type owl:Class ;
+    rdfs:subClassOf :УсловияЭксплуатации ;
+    rdfs:label "Температурные условия"@ru .
+
+:РежимРаботы rdf:type owl:Class ;
+    rdfs:label "Режим работы"@ru .
+
+:НормальныйРежим rdf:type owl:Class ;
+    rdfs:subClassOf :РежимРаботы .
+
+:ОграниченныйРежим rdf:type owl:Class ;
+    rdfs:subClassOf :РежимРаботы ;
+    rdfs:label "Ограниченный режим"@ru ;
+    rdfs:comment "Режим с пониженной максимальной мощностью"@ru .
+
+:ДополнительноеУстройство rdf:type owl:Class ;
+    rdfs:label "Дополнительное устройство"@ru .
+
+:СетевойФильтр rdf:type owl:Class ;
+    rdfs:subClassOf :ДополнительноеУстройство .
+
+:СтабилизаторЧастоты rdf:type owl:Class ;
+    rdfs:subClassOf :ДополнительноеУстройство .
+
+#################################################################
+#    Объектные свойства
+#################################################################
+
+:работаетВУсловиях rdf:type owl:ObjectProperty ;
+    rdfs:domain :Стабилизатор ;
+    rdfs:range :УсловияЭксплуатации ;
+    rdfs:label "работает в условиях"@ru .
+
+:требуетДопУстройство rdf:type owl:ObjectProperty ;
+    rdfs:domain :Стабилизатор ;
+    rdfs:range :ДополнительноеУстройство ;
+    rdfs:label "требует дополнительное устройство"@ru .
+
+:имеетРежим rdf:type owl:ObjectProperty ;
+    rdfs:domain :Стабилизатор ;
+    rdfs:range :РежимРаботы ;
+    rdfs:label "имеет режим работы"@ru .
+
+#################################################################
+#    Функциональные свойства (Data properties)
+#################################################################
+
+:высотаНадУровнемМоря rdf:type owl:DatatypeProperty ;
+    rdfs:domain :ВысотныеУсловия ;
+    rdfs:range xsd:integer ;
+    rdfs:label "высота над уровнем моря"@ru ;
+    rdfs:comment "Высота в метрах"@ru .
+
+:частотаСети rdf:type owl:DatatypeProperty ;
+    rdfs:domain :ЧастотныеУсловия ;
+    rdfs:range xsd:float ;
+    rdfs:label "частота сети"@ru ;
+    rdfs:comment "Частота в герцах"@ru .
+
+:температура rdf:type owl:DatatypeProperty ;
+    rdfs:domain :ТемпературныеУсловия ;
+    rdfs:range xsd:integer ;
+    rdfs:label "температура"@ru ;
+    rdfs:comment "Температура в градусах Цельсия"@ru .
+
+:максимальнаяМощность rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Стабилизатор ;
+    rdfs:range xsd:integer ;
+    rdfs:label "максимальная мощность"@ru ;
+    rdfs:comment "Максимальная мощность в ваттах"@ru .
+
+:снижениеЭффективности rdf:type owl:DatatypeProperty ;
+    rdfs:domain :ВысотныеУсловия ;
+    rdfs:range xsd:float ;
+    rdfs:label "снижение эффективности"@ru ;
+    rdfs:comment "Процент снижения эффективности на 1000м"@ru .
+
+#################################################################
+#    Индивиды (конкретные экземпляры)
+#################################################################
+
+:ЭнергоСейф2000 rdf:type owl:NamedIndividual , :Стабилизатор ;
+    rdfs:label "ЭнергоСейф-2000"@ru ;
+    :максимальнаяМощность 2000 .
+
+:ВысотныеУсловия_3500м rdf:type owl:NamedIndividual , :ВысотныеУсловия ;
+    :высотаНадУровнемМоря 3500 ;
+    :снижениеЭффективности 15.0 .
+
+:ЧастотныеУсловия_Нестабильные rdf:type owl:NamedIndividual , :ЧастотныеУсловия ;
+    :частотаСети 48.5 .
+
+:СетевойФильтр_Тип1 rdf:type owl:NamedIndividual , :СетевойФильтр ;
+    rdfs:label "Сетевой фильтр"@ru .
+
+:СтабилизаторЧастоты_Тип1 rdf:type owl:NamedIndividual , :СтабилизаторЧастоты ;
+    rdfs:label "Внешний стабилизатор частоты"@ru .
+
+#################################################################
+#    SWRL-правила для особых условий
+#################################################################
+
+# Правило 1: Если высота > 3000м, то максимальная мощность снижается до 1700Вт
+[
+    rdf:type swrl:Imp ;
+    rdfs:label "Правило ограничения мощности на высоте"@ru ;
+    
+    swrl:body [
+        rdf:type swrl:AtomList ;
+        rdf:first [ rdf:type swrl:ClassAtom ; swrl:classPredicate :Стабилизатор ; swrl:argument1 :x ] ;
+        rdf:rest [
+            rdf:type swrl:AtomList ;
+            rdf:first [ rdf:type swrl:ClassAtom ; swrl:classPredicate :ВысотныеУсловия ; swrl:argument1 :y ] ;
+            rdf:rest [
+                rdf:type swrl:AtomList ;
+                rdf:first [ rdf:type swrl:IndividualPropertyAtom ; swrl:propertyPredicate :работаетВУсловиях ; swrl:argument1 :x ; swrl:argument2 :y ] ;
+                rdf:rest [
+                    rdf:type swrl:AtomList ;
+                    rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :высотаНадУровнемМоря ; swrl:argument1 :y ; swrl:argument2 :высота ] ;
+                    rdf:rest [
+                        rdf:type swrl:AtomList ;
+                        rdf:first [ rdf:type swrl:BuiltInAtom ; swrl:builtin <http://www.w3.org/2003/11/swrlb#greaterThan> ; swrl:arguments ( :высота "3000"^^xsd:integer ) ] ;
+                        rdf:rest rdf:nil
+                    ]
+                ]
+            ]
+        ]
+    ] ;
+    
+    swrl:head [
+        rdf:type swrl:AtomList ;
+        rdf:first [ rdf:type swrl:ClassAtom ; swrl:classPredicate :ОграниченныйРежим ; swrl:argument1 :x ] ;
+        rdf:rest [
+            rdf:type swrl:AtomList ;
+            rdf:first [ 
+                rdf:type swrl:DatavaluedPropertyAtom ; 
+                swrl:propertyPredicate :максимальнаяМощность ; 
+                swrl:argument1 :x ; 
+                swrl:argument2 "1700"^^xsd:integer 
+            ] ;
+            rdf:rest rdf:nil
+        ]
+    ]
+] .
+
+# Правило 2: Если частота сети отклоняется от 50Гц более чем на 1Гц, требуется стабилизатор частоты
+[
+    rdf:type swrl:Imp ;
+    rdfs:label "Правило стабилизации частоты"@ru ;
+    
+    swrl:body [
+        rdf:type swrl:AtomList ;
+        rdf:first [ rdf:type swrl:ClassAtom ; swrl:classPredicate :Стабилизатор ; swrl:argument1 :x ] ;
+        rdf:rest [
+            rdf:type swrl:AtomList ;
+            rdf:first [ rdf:type swrl:ClassAtom ; swrl:classPredicate :ЧастотныеУсловия ; swrl:argument1 :y ] ;
+            rdf:rest [
+                rdf:type swrl:AtomList ;
+                rdf:first [ rdf:type swrl:IndividualPropertyAtom ; swrl:propertyPredicate :работаетВУсловиях ; swrl:argument1 :x ; swrl:argument2 :y ] ;
+                rdf:rest [
+                    rdf:type swrl:AtomList ;
+                    rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ; swrl:propertyPredicate :частотаСети ; swrl:argument1 :y ; swrl:argument2 :частота ] ;
+                    rdf:rest [
+                        rdf:type swrl:AtomList ;
+                        rdf:first [ 
+                            rdf:type swrl:BuiltInAtom ; 
+                            swrl:builtin <http://www.w3.org/2003/11/swrlb#or> ; 
+                            swrl:arguments ( 
+                                [ rdf:type swrl:BuiltInAtom ; swrl:builtin <http://www.w3.org/2003/11/swrlb#lessThan> ; swrl:arguments ( :частота "49.0"^^xsd:float ) ]
+                                [ rdf:type swrl:BuiltInAtom ; swrl:builtin <http://www.w3.org/2003/11/swrlb#greaterThan> ; swrl:arguments ( :частота "51.0"^^xsd:float ) ]
+                            )
+                        ] ;
+                        rdf:rest rdf:nil
+                    ]
+                ]
+            ]
+        ]
+    ] ;
+    
+    swrl:head [
+        rdf:type swrl:AtomList ;
+        rdf:first [ 
+            rdf:type swrl:IndividualPropertyAtom ; 
+            swrl:propertyPredicate :требуетДопУстройство ; 
+            swrl:argument1 :x ; 
+            swrl:argument2 :СтабилизаторЧастоты_Тип1
+        ] ;
+        rdf:rest rdf:nil
+    ]
+] .
+
+# Правило 3: При питании от генератора требуется сетевой фильтр
+[
+    rdf:type swrl:Imp ;
+    rdfs:label "Правило использования сетевого фильтра"@ru ;
+    
+    swrl:body [
+        rdf:type swrl:AtomList ;
+        rdf:first [ rdf:type swrl:ClassAtom ; swrl:classPredicate :Стабилизатор ; swrl:argument1 :x ] ;
+        rdf:rest [
+            rdf:type swrl:AtomList ;
+            rdf:first [ 
+                rdf:type swrl:IndividualPropertyAtom ; 
+                swrl:propertyPredicate :питаетсяОт ; 
+                swrl:argument1 :x ; 
+                swrl:argument2 :Генератор
+            ] ;
+            rdf:rest rdf:nil
+        ]
+    ] ;
+    
+    swrl:head [
+        rdf:type swrl:AtomList ;
+        rdf:first [ 
+            rdf:type swrl:IndividualPropertyAtom ; 
+            swrl:propertyPredicate :требуетДопУстройство ; 
+            swrl:argument1 :x ; 
+            swrl:argument2 :СетевойФильтр_Тип1
+        ] ;
+        rdf:rest rdf:nil
+    ]
+] .
+
+# Добавим недостающий класс и индивид
+:Генератор rdf:type owl:Class .
+:Генератор_Тип1 rdf:type owl:NamedIndividual , :Генератор .
+
+:питаетсяОт rdf:type owl:ObjectProperty ;
+    rdfs:domain :Стабилизатор ;
+    rdfs:range :Генератор .
